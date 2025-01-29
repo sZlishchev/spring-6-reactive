@@ -23,9 +23,9 @@ import java.net.URI;
 @RequiredArgsConstructor
 public class CustomerController {
 
-    private static final String CUSTOMER_PATH = "/api/v2/customers";
+    public static final String CUSTOMER_PATH = "/api/v2/customers";
 
-    private static final String CUSTOMER_ID_PATH = CUSTOMER_PATH + "/{customerId}";
+    public static final String CUSTOMER_ID_PATH = CUSTOMER_PATH + "/{customerId}";
 
     private final CustomerService customerService;
 
@@ -63,7 +63,7 @@ public class CustomerController {
     @DeleteMapping(CUSTOMER_ID_PATH)
     public Mono<ResponseEntity<Void>> deleteCustomer(@PathVariable Integer customerId) {
         return this.customerService.deleteCustomer(customerId)
-                .then(Mono.fromCallable(() -> ResponseEntity.noContent().build()));
+                .thenReturn(ResponseEntity.noContent().build());
     }
 
     private URI buildUri(final Integer customerId) {
