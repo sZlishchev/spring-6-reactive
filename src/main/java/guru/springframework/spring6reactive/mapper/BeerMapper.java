@@ -6,10 +6,8 @@ import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import org.mapstruct.NullValueCheckStrategy;
+import org.mapstruct.NullValueMappingStrategy;
 import org.mapstruct.NullValuePropertyMappingStrategy;
-
-import static org.mapstruct.NullValueMappingStrategy.RETURN_DEFAULT;
 
 @Mapper
 public interface BeerMapper {
@@ -25,4 +23,12 @@ public interface BeerMapper {
     @Mapping(target = "quantityOnHand", source = "quantityOnHand")
     @Mapping(target = " price", source = "price")
     Beer merge(@MappingTarget Beer beer, final BeerDTO beerDTO);
+
+    @BeanMapping(ignoreByDefault = true, nullValueMappingStrategy = NullValueMappingStrategy.RETURN_DEFAULT)
+    @Mapping(target = "beerName", source = "beerName")
+    @Mapping(target = "beerStyle", source = "beerStyle")
+    @Mapping(target = "upc", source = "upc")
+    @Mapping(target = "quantityOnHand", source = "quantityOnHand")
+    @Mapping(target = " price", source = "price")
+    Beer update(@MappingTarget Beer beer, final BeerDTO beerDTO);
 }
