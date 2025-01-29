@@ -36,10 +36,23 @@ public class BeerServiceImpl implements BeerService {
     }
 
     @Override
-    public Mono<BeerDTO> updateBeer(final Integer beerId, BeerDTO beerDTO) {
+    public Mono<BeerDTO> updateBeer(Integer beerId, BeerDTO beerDTO) {
+        return this.beerRepository.findById(beerId)
+                .map(beerToUpdate -> this.beerMapper.update(beerToUpdate, beerDTO))
+                .flatMap(this.beerRepository::save)
+                .map(this.beerMapper::toDTO);
+    }
+
+    @Override
+    public Mono<BeerDTO> patchBeer(final Integer beerId, BeerDTO beerDTO) {
         return this.beerRepository.findById(beerId)
                 .map(beerToUpdate -> this.beerMapper.merge(beerToUpdate, beerDTO))
                 .flatMap(this.beerRepository::save)
                 .map(this.beerMapper::toDTO);
+    }
+
+    @Override
+    public Mono<Void> deleteById(Integer beerId) {
+        return this.beerRepository.deleteById(beerId);
     }
 }
