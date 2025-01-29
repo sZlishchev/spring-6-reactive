@@ -32,7 +32,7 @@ public class BeerController {
     public Mono<ResponseEntity<Void>> createNewBeer(@RequestBody BeerDTO beerDTO) {
        return this.beerService.createBeer(beerDTO)
                .map(savedBeer ->
-               ResponseEntity.created(this.buildUri(beerDTO.getId()))
+               ResponseEntity.created(this.buildUri(savedBeer.getId()))
                        .build());
     }
 
@@ -57,18 +57,23 @@ public class BeerController {
     public Mono<ResponseEntity<Void>> patchBeer(@PathVariable Integer beerId,
                                                 @Validated @RequestBody BeerDTO beerDTO) {
          return this.beerService.patchBeer(beerId, beerDTO)
-                 .map(patchedBeer -> ResponseEntity.ok().build());
+                 .map(patchedBeer -> ResponseEntity
+                         .ok()
+                         .build());
     }
 
     @DeleteMapping(BEER_ID_PATH)
     public Mono<ResponseEntity<Void>> deleteBeer(@PathVariable Integer beerId) {
         return this.beerService.deleteById(beerId)
-                .then(Mono.fromCallable(() -> ResponseEntity.noContent().build()));
+                .thenReturn(ResponseEntity
+                        .noContent()
+                        .build());
     }
 
     private URI buildUri(final Integer beerId) {
         return UriComponentsBuilder.fromUriString(
                                         "http://localhost:8080" + BEER_PATH + "/" + beerId)
-                                .build().toUri();
+                                .build()
+                .toUri();
     }
 }
